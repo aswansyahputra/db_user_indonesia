@@ -55,4 +55,4 @@ cln_all <-
             .id = "lokasi_kopdar")
 glimpse(cln_all)
 
-write_csv("input/db_user_indonesia.csv")
+write_csv(cln_all, "input/db_user_indonesia.csv")
