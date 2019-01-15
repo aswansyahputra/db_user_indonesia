@@ -32,3 +32,59 @@ pkgs %>%
   ) +
   theme_ipsum_ps()
 ggsave("graphics/pkgs.png")
+
+
+# Shinyapps ---------------------------------------------------------------
+
+shinyapps <- 
+  cln_all %>% 
+  select(lama_penggunaan, contains("shinyapps")) %>% 
+  mutate(
+    lama_penggunaan = factor(
+      lama_penggunaan, 
+      levels = c(
+        "belum menggunakan",
+        "kurang dari satu tahun",
+        "antara satu hingga tiga tahun",
+        "lebih dari tiga tahun"
+      ),
+      labels = c(
+        "Never",
+        "< 1 year",
+        "1-3 year",
+        "> 3 year"
+      )
+    ),
+    mengetahui_shinyapps = factor(
+      mengetahui_shinyapps,
+      levels = c(
+        "belum mengetahui",
+        "mengetahui namun tidak menggunakan",
+        "mengetahui dan menggunakan"
+      ),
+      labels = c(
+        "No",
+        "Yes, but not using it",
+        "Yes, using it"
+      )
+    )
+  ) %>%
+  count(lama_penggunaan, mengetahui_shinyapps) %>% 
+  group_by(lama_penggunaan) %>% 
+  mutate(
+    percent = n/sum(n)
+  )
+
+shinyapps %>% 
+  ggplot(aes(x = lama_penggunaan, y = percent, fill = mengetahui_shinyapps)) +
+  geom_col() +
+  labs(
+    x  = "Years using R",
+    y = "",
+    fill = "Know Shinyapps?",
+    title = "useR! Indonesia Familiarity with Shinyapps",
+    caption = "Source: database of useR! registered for meetups"
+  ) +
+  scale_y_percent() +
+  theme_ipsum_ps()
+ggsave("graphics/shinyapps.png")
