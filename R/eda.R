@@ -51,8 +51,8 @@ shinyapps <-
       labels = c(
         "Never",
         "< 1 year",
-        "1-3 year",
-        "> 3 year"
+        "1-3 years",
+        "> 3 years"
       )
     ),
     mengetahui_shinyapps = factor(
@@ -73,7 +73,8 @@ shinyapps <-
   group_by(lama_penggunaan) %>% 
   mutate(
     percent = n/sum(n)
-  )
+  ) %>% 
+  ungroup()
 
 shinyapps %>% 
   ggplot(aes(x = lama_penggunaan, y = percent, fill = mengetahui_shinyapps)) +
@@ -86,5 +87,42 @@ shinyapps %>%
     caption = "Source: database of useR! registered for meetups"
   ) +
   scale_y_percent() +
+  scale_fill_brewer(type = "qual", palette = "Set2") +
   theme_ipsum_ps()
-ggsave("graphics/shinyapps.png")
+ggsave("graphics/shinyapps1.png")
+
+shinyapps %>% 
+  ggplot(aes(x = mengetahui_shinyapps, y = n, fill = lama_penggunaan)) +
+  geom_col() +
+  labs(
+    x = "Know Shinyapps",
+    y = "Count",
+    fill  = "Years using R",
+    title = "useR! Indonesia Familiarity with Shinyapps",
+    caption = "Source: database of useR! registered for meetups"
+  ) +
+  scale_fill_brewer(type = "qual", palette = "Set2") +
+  theme_ipsum_ps()
+ggsave("graphics/shinyapps2.png")
+
+shinyapps %>% 
+  mutate(
+    mengetahui_shinyapps = case_when(
+      mengetahui_shinyapps == "No" ~ "No",
+      TRUE ~ "Yes"
+    )
+  ) %>% 
+  ggplot(aes(x = mengetahui_shinyapps, y = n, fill = lama_penggunaan)) +
+  geom_col() +
+  labs(
+    x = "Know Shinyapps",
+    y = "Count",
+    fill  = "Years using R",
+    title = "useR! Indonesia Familiarity with Shinyapps",
+    caption = "Source: database of useR! registered for meetups"
+  ) +
+  scale_fill_brewer(type = "qual", palette = "Set2") +
+  theme_ipsum_ps()
+ggsave("graphics/shinyapps3.png")
+  
+  
